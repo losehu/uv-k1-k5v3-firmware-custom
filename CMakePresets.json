@@ -46,6 +46,7 @@
                 "ENABLE_SCAN_RANGES": true,
                 "ENABLE_REGA": false,
                 "ENABLE_EXTRA_UART_CMD": false,
+                "ENABLE_UART_FLASH_CMD": false,
                 "ENABLE_FEAT_F4HWN": true,
                 "ENABLE_FEAT_F4HWN_GAME": false,
                 "ENABLE_FEAT_F4HWN_SCREENSHOT": false,
@@ -191,6 +192,15 @@
                 "EDITION_STRING": "Fusion",
                 "TARGET": "f4hwn.fusion"
             }
+        },
+        {
+            "name": "losehu",
+            "inherits": "Fusion",
+            "cacheVariables": {
+                "ENABLE_UART_FLASH_CMD": true,
+                "EDITION_STRING": "losehu",
+                "TARGET": "f4hwn.losehu"
+            }
         }
     ],
     "buildPresets": [
@@ -221,6 +231,10 @@
         {
             "name": "Fusion",
             "configurePreset": "Fusion"
+        },
+        {
+            "name": "losehu",
+            "configurePreset": "losehu"
         }
     ]
 }

@@ -180,6 +180,11 @@ enable_feature(ENABLE_REGA
 # Thank you @reppad
 enable_feature(ENABLE_EXTRA_UART_CMD)
 
+# AddIn: UART Flash commands for full 2MB SPI Flash access
+enable_feature(ENABLE_UART_FLASH_CMD
+    ../AddIn/uart_flash_cmd.c
+)
+
 # ---- F4HWN MODS ----
 
 enable_feature(ENABLE_FEAT_F4HWN)

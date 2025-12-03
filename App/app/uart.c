@@ -49,6 +49,10 @@
     #include "sram-overlay.h"
 #endif
 
+#ifdef ENABLE_UART_FLASH_CMD
+    #include "../AddIn/uart_flash_cmd.h"
+#endif
+
 #define UNUSED(x) (void)(x)
 
 #define DMA_INDEX(x, y, z) (((x) + (y)) % (z))
@@ -177,12 +181,12 @@ typedef union
 
 
 #if defined(ENABLE_UART)
-    static uint32_t UART_Timestamp;
+    uint32_t UART_Timestamp;
     static UART_Command_t UART_Command;
     static uint16_t gUART_WriteIndex;
 #endif
 #if defined(ENABLE_USB)
-    static uint32_t VCP_Timestamp;
+    uint32_t VCP_Timestamp;
     static UART_Command_t VCP_Command;
     static uint16_t VCP_ReadIndex;
 #endif
@@ -239,7 +243,8 @@ static void SendReply_VCP(void *pReply, uint16_t Size)
 }
 #endif // ENABLE_USB
 
-static void SendReply(uint32_t Port, void *pReply, uint16_t Size)
+// Make SendReply available to AddIn modules
+void SendReply(uint32_t Port, void *pReply, uint16_t Size)
 {
 #if defined(ENABLE_USB)
     if (Port == UART_PORT_VCP)
@@ -799,11 +804,20 @@ void UART_HandleCommand(uint32_t Port)
             CMD_051D(Port, pUART_Command->Buffer);
             break;
 
+#ifdef ENABLE_UART_FLASH_CMD
+        case 0x542B:    // Read SPI Flash with 32-bit address (AddIn plugin)
+        case 0x5438:    // Write SPI Flash with 32-bit address (AddIn plugin)
+            if (UART_FlashCmd_Process(Port, pUART_Command->Header.ID, pUART_Command->Buffer)) {
+                // Command handled by plugin
+            }
+            break;
+#else
         case 0x051F:    // Not implementing non-authentic command
             break;
 
         case 0x0521:    // Not implementing non-authentic command
             break;
+#endif
 
 #ifdef ENABLE_EXTRA_UART_CMD
         case 0x0527:
